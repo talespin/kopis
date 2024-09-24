@@ -5,7 +5,17 @@
 	"request_delay_time_max": 10,
 	"comment2": "menus 만 이용하여 트래픽발생",
 	"use_menus_only": "Y",
-	"menus": {
+	"comment3": "run time 은 프로그램이 실행되는 시간범위를 여러개 넣을수 있슴",
+	"run_time":[
+		["09:00:00","09:30:00"],
+		["10:15:24","10:48:39"],
+		["11:04:12","11:58:32"],
+		["12:54:29","13:30:51"],
+		["13:36:21","15:23:43"],
+		["15:30:12","17:53:09"],
+		["20:10:44","22:38:10"]
+	]
+	,"menus": {
 		"main": "https://kopis.or.kr/por/main/main.do",
 		"DB검색:공연DB": "https://kopis.or.kr/por/db/pblprfr/pblprfr.do?menuId:MNU_00020&searchWord:&searchType:total",
 		"DB검색:공연시설DB": "https://kopis.or.kr/por/db/prfplc/prfplc.do?menuId:MNU_00021&searchWord:&searchType:total",
