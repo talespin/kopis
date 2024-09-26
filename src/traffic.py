@@ -19,7 +19,7 @@ def get_config():
 
 def get_chrome_option():
     options = ChromeOptions()
-    options.add_argument('headless')
+    #options.add_argument('headless')
     return options
 
 
@@ -43,6 +43,16 @@ def connect_url(chrome, url, config):
     else:
         sleep(randrange(config['request_delay_time_min'], config['request_delay_time_max']))
     chrome.get(url)
+
+def run_script(chrome, script, config):
+    logging.debug('connect_url:' + url)
+    if config['request_delay_time_min'] == config['request_delay_time_max']:
+        sleep(config['request_delay_time_min'])
+    else:
+        sleep(randrange(config['request_delay_time_min'], config['request_delay_time_max']))
+    menus = config['menus']
+    script = menus[list(menus.keys())[randrange(0, len(menus.keys())+1)]]
+    chrome.execute_script(script)
     
 
 def go_random_target(chrome, base_url):
@@ -65,7 +75,7 @@ def close_other_tab(chrome, main_handle):
 def main():
     try:
         chrome = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=get_chrome_option())
-        chrome.set_window_size(1920,1280)
+        chrome.set_window_size(1800,950)
         main_handle = chrome.window_handles[0]
     except:
         get_exit_msg()
@@ -84,9 +94,7 @@ def main():
                 chrome.get(config['base_url'])
             use_menu_only = True if config.get('use_menus_only') == 'Y' else False
             if use_menu_only:
-                menus = config['menus']
-                url = menus[list(menus.keys())[randrange(0, len(menus.keys())+1)]]
-                connect_url(chrome, url, config)
+                run_script(chrome, script, config)
             else:
                 if chrome.current_url.startswith(config['base_url']) == False:
                     chrome.get(config['base_url'])
