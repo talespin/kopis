@@ -17,9 +17,10 @@ def get_config():
         return json.load(fs)
 
 
-def get_chrome_option():
+def get_chrome_option(config):
     options = ChromeOptions()
-    #options.add_argument('headless')
+    if config.get('browser_headless') == True:    
+        options.add_argument('headless')
     return options
 
 
@@ -32,20 +33,12 @@ def get_exit_msg():
         ##                                                                               ##
         ###################################################################################
 '''
-    if os.environ.get('OS','').find('indow') >= 0:
-        msg = msg.encode('utf-8').decode('cp949')
+    #if os.environ.get('OS','').find('indow') >= 0:
+    #    msg = msg.encode('utf-8').decode('cp949')
     print(msg)
 
-def connect_url(chrome, url, config):
-    logging.debug('connect_url:' + url)
-    if config['request_delay_time_min'] == config['request_delay_time_max']:
-        sleep(config['request_delay_time_min'])
-    else:
-        sleep(randrange(config['request_delay_time_min'], config['request_delay_time_max']))
-    chrome.get(url)
 
-def run_script(chrome, script, config):
-    logging.debug('connect_url:' + url)
+def run_script(chrome, config):
     if config['request_delay_time_min'] == config['request_delay_time_max']:
         sleep(config['request_delay_time_min'])
     else:
@@ -74,13 +67,17 @@ def close_other_tab(chrome, main_handle):
 
 def main():
     try:
-        chrome = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=get_chrome_option())
+        if get_config().get('debug_mode',None) == 'DEBUG':
+            logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+        else:
+            logging.basicConfig(level=logging.WARNING, stream=sys.stdout)
+        chrome = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=get_chrome_option(get_config()))
         chrome.set_window_size(1800,950)
         main_handle = chrome.window_handles[0]
     except:
         get_exit_msg()
-        exit(0)
-    cnt = 0
+        sys.exit(0)
+    cnt = 100
     while True:
         config = get_config()
         now = datetime.now().strftime('%H:%M:%S')
@@ -94,7 +91,7 @@ def main():
                 chrome.get(config['base_url'])
             use_menu_only = True if config.get('use_menus_only') == 'Y' else False
             if use_menu_only:
-                run_script(chrome, script, config)
+                run_script(chrome, config)
             else:
                 if chrome.current_url.startswith(config['base_url']) == False:
                     chrome.get(config['base_url'])
@@ -107,5 +104,5 @@ def main():
 
 
 if __name__=='__main__':
-    logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+    os.environ['WDM_SSL_VERIFY'] = '0'
     main()
