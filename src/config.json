@@ -1,9 +1,9 @@
 {
 	"debug_mode":"WARNING",
-	"browser_headless": false,
+	"browser_headless": true,
 	"base_url": "https://kopis.or.kr",
 	"comment1": "트래픽발송시 최소/최대 대기시간",
-	"request_delay_time_min": 10,
+	"request_delay_time_min": 5,
 	"request_delay_time_max": 10,
 	"comment2": "menus 만 이용하여 트래픽발생",
 	"use_menus_only": "Y",
