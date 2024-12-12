@@ -21,6 +21,10 @@ def get_chrome_option(config):
     options = ChromeOptions()
     if config.get('browser_headless') == True:    
         options.add_argument('headless')
+    if config.get('iphone') == True:
+        mobile_emulation = { "deviceName": "iPhone X" }
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("mobileEmulation", mobile_emulation)
     return options
 
 
@@ -97,12 +101,20 @@ def main():
                     chrome.get(config['base_url'])
                 else:
                     go_random_target(chrome, config['base_url'])
+            break
         except Exception as e:
             logging.debug(str(e))
             sleep(10)
+            break
         close_other_tab(chrome, main_handle)
+    chrome.close()
+
 
 
 if __name__=='__main__':
-    os.environ['WDM_SSL_VERIFY'] = '0'
-    main()
+    while True:
+        try:
+            os.environ['WDM_SSL_VERIFY'] = '0'
+            main()
+        except:
+            sleep(60)
